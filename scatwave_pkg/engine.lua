@@ -8,8 +8,14 @@
 local ffi = require 'ffi'
 local FFT = {}
 
+local sys = require 'sys'
 
-local ok, err = pcall(function () FFT.C=ffi.load('fftw3f.so.3') end)
+local ok, err
+if sys.OS=='macos' then
+  ok, err = pcall(function () FFT.C=ffi.load('fftw3f.dylib') end)
+elseif sys.OS=='linux' then
+  ok, err = pcall(function () FFT.C=ffi.load('fftw3f.so.3') end)
+end
 
 if(not ok) then
    print(err)
